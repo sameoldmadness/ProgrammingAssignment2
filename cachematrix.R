@@ -1,15 +1,36 @@
 ## Put comments here that give an overall description of what your
 ## functions do
 
-## Write a short comment describing this function
+## Creates container for matrix and its inverse
+## with respective getters and setters.
+## Inverse gets cleared when new matrix is set.
 
-makeCacheMatrix <- function(x = matrix()) {
-
+makeCacheMatrix <- function(matrix = matrix()) {
+  inverse <- NULL
+  set <- function(newMatrix) {
+    matrix <<- newMatrix
+    inverse <<- NULL
+  }
+  get <- function() matrix
+  setinverse <- function(newInverse) inverse <<- newInverse
+  getinverse <- function() inverse
+  list(set = set, get = get,
+       setinverse = setinverse,
+       getinverse = getinverse)
 }
 
+## Gets inverse from cacheMatrix if exists
+## or evaluates and saves it otherwise.
+## @see makeCacheMatrix
 
-## Write a short comment describing this function
-
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+cacheSolve <- function(cacheMatrix, ...) {
+  inverse <- cacheMatrix$getinverse()
+  if(!is.null(inverse)) {
+    message("getting cached data")
+    return(inverse)
+  }
+  matrix <- cacheMatrix$get()
+  inverse <- solve(matrix, ...)
+  cacheMatrix$setinverse(inverse)
+  inverse
 }
